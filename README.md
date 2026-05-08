@@ -1,50 +1,69 @@
-# Development
+# AlphaCheckers
 
-Your new bare-bones project includes minimal organization with a single `main.rs` file and a few assets.
+AlphaCheckers is a zero-knowledge self-play checkers engine and training dashboard built from the ground up in Rust. It combines a high-performance bitboard-based rules engine with a Deep Residual Neural Network and Monte Carlo Tree Search (MCTS).
 
-```
-project/
-├─ assets/ # Any assets that are used by the app should be placed here
-├─ src/
-│  ├─ main.rs # main.rs is the entry point to your application and currently contains all components for the app
-├─ Cargo.toml # The Cargo.toml file defines the dependencies and feature flags for your project
-```
+## 🚀 Features
 
-### Automatic Tailwind (Dioxus 0.7+)
+- **Bitboard Engine:** High-performance move generation using `u32` bitmasks, supporting full checkers rules including forced captures and multi-jump sequences.
+- **Neural Network:** A Residual Network (ResNet) built with the **Burn** framework, featuring dual heads for policy (move probabilities) and value (win probability) prediction.
+- **PUCT Search:** Monte Carlo Tree Search guided by neural network priors, allowing the engine to explore promising lines of play efficiently.
+- **Self-Play Training:** Integrated training loop that generates experience from self-play games and optimizes the model in real-time.
+- **Dioxus UI:** A modern, interactive dashboard for monitoring training progress, visualizing search heatmaps, and playing against the AI.
+- **Cross-Platform:** Supports Web (WASM), Desktop, and Server targets with CPU (NdArray) and GPU (Wgpu) acceleration.
 
-As of Dioxus 0.7, there no longer is a need to manually install tailwind. Simply `dx serve` and you're good to go!
+## 🏗️ Architecture
 
-Automatic tailwind is supported by checking for a file called `tailwind.css` in your app's manifest directory (next to Cargo.toml). To customize the file, use the dioxus.toml:
+The project is structured into several modular components:
 
-```toml
-[application]
-tailwind_input = "my.css"
-tailwind_output = "assets/out.css" # also customize the location of the out file!
-```
+- **`src/engine.rs`**: The "physics" of the game. Handles board representation, legal move generation, and game state transitions using bitboards.
+- **`src/ml.rs`**: Neural network definitions and backend integration. Implements the ResNet architecture and provides wrappers for inference and training using the Burn framework.
+- **`src/search.rs`**: Implements MCTS and PUCT search logic. This is where the engine "thinks" by simulating future moves guided by the neural network.
+- **`src/training.rs`**: Orchestrates the self-play loop, manages the experience replay buffer, and handles model optimization.
+- **`src/main.rs`**: The Dioxus application entry point, defining the UI components, routing, and state management.
 
-### Tailwind Manual Install
+## 🛠️ Getting Started
 
-To use tailwind plugins or manually customize tailwind, you can can install the Tailwind CLI and use it directly.
+### Prerequisites
 
-### Tailwind
-1. Install npm: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
-2. Install the Tailwind CSS CLI: https://tailwindcss.com/docs/installation/tailwind-cli
-3. Run the following command in the root of the project to start the Tailwind CSS compiler:
+- **Rust:** You'll need the latest stable version of Rust installed.
+- **Dioxus CLI:** Install it via `cargo install dioxus-cli`.
 
-```bash
-npx @tailwindcss/cli -i ./input.css -o ./assets/tailwind.css --watch
-```
+### Running the App
 
-### Serving Your App
-
-Run the following command in the root of your project to start developing with the default platform:
+To start the development server for the web platform:
 
 ```bash
 dx serve --platform web
 ```
 
-To run for a different platform, use the `--platform platform` flag. E.g.
+For the desktop platform (with GPU acceleration if enabled):
+
 ```bash
 dx serve --platform desktop
 ```
 
+### Feature Flags
+
+- `ml-cpu`: Enables neural network support using the NdArray CPU backend.
+- `ml-gpu`: Enables neural network support using the Wgpu GPU backend.
+- `web`: Optimized for WASM/Browser environments.
+- `desktop`: Optimized for native desktop environments.
+
+## 📊 Training Dashboard
+
+The training dashboard provides real-time insights into the engine's learning process:
+- **Optimization Trace:** Live chart showing the reduction in policy and value loss over time.
+- **Mental Heatmap:** Visualizes the MCTS visit density on the board, showing which squares the AI is focusing on.
+- **Metrics:** Track training steps, position evaluations, and tournament wins/losses between different versions of the engine.
+
+## 🧪 Testing
+
+The project includes a comprehensive suite of unit tests for the engine, ML components, and search logic.
+
+```bash
+cargo test --all-features
+```
+
+## 📜 License
+
+This project is licensed under the MIT License.
