@@ -1,0 +1,29 @@
+[package]
+name = "checkers"
+version = "0.1.0"
+authors = ["kagesyntax <em2009manu2010el@gmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+burn = { version = "0.20.0", default-features = false, features = ["std"], optional = true }
+dioxus = { version = "0.7.1", features = ["router", "fullstack"] }
+gloo-timers = { version = "0.3", features = ["futures"], optional = true }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+getrandom = { version = "0.3", features = ["wasm_js"], optional = true }
+tokio = { version = "1.37", features = ["time", "sync", "macros", "rt-multi-thread"], optional = true }
+web-sys = { version = "0.3", features = ["Window", "Storage"], optional = true }
+
+[dev-dependencies]
+tokio = { version = "1.37", features = ["full"] }
+
+[features]
+default = ["web", "ml-cpu"]
+web = ["dioxus/web", "dep:gloo-timers", "dep:web-sys", "dep:getrandom", "ml-cpu"]
+desktop = ["dioxus/desktop", "dep:tokio", "ml-gpu"]
+mobile = ["dioxus/mobile"]
+server = ["dioxus/server", "dep:tokio"]
+ml-cpu = ["dep:burn", "burn/ndarray", "burn/autodiff", "burn/store"]
+ml-gpu = ["ml-cpu", "burn/wgpu"]
