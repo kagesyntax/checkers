@@ -1,5 +1,5 @@
 [package]
-name = "checkers"
+name = "alphacheckers"
 version = "0.1.0"
 authors = ["kagesyntax <em2009manu2010el@gmail.com>"]
 edition = "2021"
